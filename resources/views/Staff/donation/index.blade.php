@@ -26,8 +26,11 @@
             </div>
         </header>
         <div class="panel__body">
-            <div id="donationChart" style="width: 100%; height: 400px;"></div>
-            <div class="stats-summary" style="margin-top: 20px; display: flex; justify-content: space-around;">
+            <div id="donationChart" style="width: 100%; height: 400px"></div>
+            <div
+                class="stats-summary"
+                style="margin-top: 20px; display: flex; justify-content: space-around"
+            >
                 <div class="stat-card">
                     <h4>Total Donations</h4>
                     <p id="totalDonations">$0</p>
@@ -236,46 +239,50 @@
             const panelBg = style.getPropertyValue('--panel-bg').trim();
 
             const processedData = {
-                daily: dailyDonations.map(d => ({
+                daily: dailyDonations.map((d) => ({
                     x: new Date(d.date),
-                    y: parseFloat(d.total)
+                    y: parseFloat(d.total),
                 })),
-                monthly: monthlyDonations.map(d => ({
+                monthly: monthlyDonations.map((d) => ({
                     x: new Date(d.year, d.month - 1),
-                    y: parseFloat(d.total)
+                    y: parseFloat(d.total),
                 })),
                 yearly: monthlyDonations.reduce((acc, curr) => {
                     const year = parseInt(curr.year);
-                    const existing = acc.find(item => item.x.getFullYear() === year);
+                    const existing = acc.find((item) => item.x.getFullYear() === year);
                     if (existing) {
                         existing.y += parseFloat(curr.total);
                     } else {
                         acc.push({
                             x: new Date(year, 0),
-                            y: parseFloat(curr.total)
+                            y: parseFloat(curr.total),
                         });
                     }
                     return acc;
-                }, [])
+                }, []),
             };
 
             const calculateStats = (data) => {
                 const total = data.reduce((sum, item) => sum + item.y, 0);
                 const avg = total / data.length;
-                const mostActive = data.reduce((max, item) => 
-                    item.y > max.y ? item : max
-                , data[0]);
+                const mostActive = data.reduce(
+                    (max, item) => (item.y > max.y ? item : max),
+                    data[0],
+                );
 
                 document.getElementById('totalDonations').textContent = '$' + total.toFixed(2);
                 document.getElementById('avgDonation').textContent = '$' + avg.toFixed(2);
-                document.getElementById('mostActiveDay').textContent = mostActive.x.toLocaleDateString();
+                document.getElementById('mostActiveDay').textContent =
+                    mostActive.x.toLocaleDateString();
             };
 
             const options = {
-                series: [{
-                    name: 'Donations',
-                    data: processedData.monthly
-                }],
+                series: [
+                    {
+                        name: 'Donations',
+                        data: processedData.monthly,
+                    },
+                ],
                 chart: {
                     type: 'area',
                     height: 400,
@@ -295,19 +302,19 @@
                             zoomout: true,
                             pan: true,
                         },
-                        autoSelected: 'zoom'
+                        autoSelected: 'zoom',
                     },
                     zoom: {
-                        enabled: true
-                    }
+                        enabled: true,
+                    },
                 },
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
                 },
                 stroke: {
                     curve: 'smooth',
                     width: 2,
-                    colors: ['#1e3d59']
+                    colors: ['#1e3d59'],
                 },
                 fill: {
                     type: 'gradient',
@@ -320,15 +327,15 @@
                             {
                                 offset: 0,
                                 color: '#1e3d59',
-                                opacity: 0.45
+                                opacity: 0.45,
                             },
                             {
                                 offset: 100,
                                 color: '#1e3d59',
-                                opacity: 0.05
-                            }
-                        ]
-                    }
+                                opacity: 0.05,
+                            },
+                        ],
+                    },
                 },
                 grid: {
                     borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -340,49 +347,49 @@
                     labels: {
                         style: {
                             colors: textColor,
-                            opacity: 0.9
+                            opacity: 0.9,
                         },
                         datetimeFormatter: {
                             year: 'yyyy',
                             month: 'MMM yyyy',
                             day: 'dd MMM',
-                        }
+                        },
                     },
                     axisBorder: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: 'rgba(255, 255, 255, 0.1)',
                     },
                     axisTicks: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
+                        color: 'rgba(255, 255, 255, 0.1)',
+                    },
                 },
                 yaxis: {
                     labels: {
                         style: {
                             colors: textColor,
-                            opacity: 0.9
+                            opacity: 0.9,
                         },
-                        formatter: function(val) {
+                        formatter: function (val) {
                             return '$' + val.toFixed(2);
-                        }
-                    }
+                        },
+                    },
                 },
                 tooltip: {
                     theme: 'dark',
                     x: {
-                        format: 'dd MMM yyyy'
+                        format: 'dd MMM yyyy',
                     },
                     y: {
-                        formatter: function(val) {
+                        formatter: function (val) {
                             return '$' + val.toFixed(2);
-                        }
+                        },
                     },
                     style: {
                         fontSize: '12px',
-                        fontFamily: undefined
+                        fontFamily: undefined,
                     },
                     marker: {
                         show: true,
-                    }
+                    },
                 },
                 markers: {
                     size: 4,
@@ -391,24 +398,26 @@
                     strokeWidth: 2,
                     hover: {
                         size: 6,
-                        colors: ['#2a5580']
-                    }
+                        colors: ['#2a5580'],
+                    },
                 },
                 theme: {
                     mode: 'dark',
-                    palette: 'palette1'
-                }
+                    palette: 'palette1',
+                },
             };
 
-            const chart = new ApexCharts(document.querySelector("#donationChart"), options);
+            const chart = new ApexCharts(document.querySelector('#donationChart'), options);
             chart.render();
             calculateStats(processedData.daily);
 
-            document.getElementById('chartTimeframe').addEventListener('change', function(e) {
+            document.getElementById('chartTimeframe').addEventListener('change', function (e) {
                 const timeframe = e.target.value;
-                chart.updateSeries([{
-                    data: processedData[timeframe]
-                }]);
+                chart.updateSeries([
+                    {
+                        data: processedData[timeframe],
+                    },
+                ]);
                 calculateStats(processedData[timeframe]);
 
                 chart.updateOptions({
@@ -418,10 +427,10 @@
                             datetimeFormatter: {
                                 year: 'yyyy',
                                 month: timeframe === 'yearly' ? 'yyyy' : 'MMM yyyy',
-                                day: timeframe === 'daily' ? 'dd MMM' : 'MMM yyyy'
-                            }
-                        }
-                    }
+                                day: timeframe === 'daily' ? 'dd MMM' : 'MMM yyyy',
+                            },
+                        },
+                    },
                 });
             });
         });
