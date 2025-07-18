@@ -42,7 +42,9 @@
 }
 
 #chatbox__messages-create {
-    max-height: 60vh;
+    resize: vertical;
+    width: 100%;
+    max-height: 60vh; 
 }
 
 .chatbox-message {
@@ -184,8 +186,9 @@
 
 .chatroom-users__list {
     list-style-type: none;
-    overflow-y: scroll;
+    overflow-y: visible;
     padding: 0 0 0 20px;
+    overflow-x: hidden;
 }
 
 .chatroom-users__user {
